@@ -32,10 +32,10 @@ public class ProductController {
     public Map<String, Object> addProduct(@RequestBody Product product) {
         Map<String, Object> result = new HashMap<>();
         if (productService.addProduct(product)) {
-            result.put("status", 200);
+
             result.put("msg", "Product added successfully");
         } else {
-            result.put("status", 500);
+
             result.put("msg", "Failed to add product");
         }
         return result;
@@ -45,10 +45,10 @@ public class ProductController {
     public Map<String, Object> updateProduct(@RequestBody Product product) {
         Map<String, Object> result = new HashMap<>();
         if (productService.updateProduct(product)) {
-            result.put("status", 200);
+
             result.put("msg", "Product updated successfully");
         } else {
-            result.put("status", 500);
+
             result.put("msg", "Failed to update product");
         }
         return result;
@@ -78,10 +78,10 @@ public class ProductController {
     public Map<String, Object> deleteProduct(@PathVariable Long productId) {
         Map<String, Object> result = new HashMap<>();
         if (productService.deleteProduct(productId)) {
-            result.put("status", 200);
+
             result.put("msg", "Product deleted successfully");
         } else {
-            result.put("status", 500);
+
             result.put("msg", "Failed to delete product");
         }
         return result;
@@ -98,14 +98,14 @@ public class ProductController {
         Map<String, Object> result = new HashMap<>();
         try {
             if (productService.updateProductStatus(productId, status)) {
-                result.put("status", 200);
+
                 result.put("msg", "商品状态更新成功");
             } else {
-                result.put("status", 500);
+
                 result.put("msg", "商品状态更新失败");
             }
         } catch (Exception e) {
-            result.put("status", 500);
+
             result.put("msg", e.getMessage());
         }
         return result;
@@ -117,14 +117,14 @@ public class ProductController {
         Map<String, Object> result = new HashMap<>();
         try {
             if (productService.updateHotStatus(productId, isHot)) {
-                result.put("status", 200);
+
                 result.put("msg", "热销状态更新成功");
             } else {
-                result.put("status", 500);
+
                 result.put("msg", "热销状态更新失败");
             }
         } catch (Exception e) {
-            result.put("status", 500);
+
             result.put("msg", e.getMessage());
         }
         return result;

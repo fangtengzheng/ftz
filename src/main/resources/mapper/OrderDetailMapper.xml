@@ -28,12 +28,12 @@
             od.rating,
             od.reviewDetail,
             om.createTime AS createTime,
-            u.userId,
+            u.user_id,
             u.username,
             u.avatar
         FROM order_detail od
         JOIN order_master om ON om.orderId = od.orderId
-        JOIN user u ON u.userId = om.userId
+        JOIN user u ON u.user_id = om.userId
         WHERE od.productId = #{productId}
           AND od.rating IS NOT NULL
         ORDER BY om.createTime DESC

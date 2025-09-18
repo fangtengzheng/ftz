@@ -120,7 +120,6 @@ public class PaymentController {
                 paymentService.updatePayment(payment);
 
                 Map<String, Object> response = new HashMap<>();
-                response.put("status", 500);
                 response.put("msg", "支付失败");
                 return ResponseEntity.badRequest().body(response);
             }
@@ -128,7 +127,6 @@ public class PaymentController {
             System.err.println("支付接口异常，收到参数: " + paymentRequest);
             e.printStackTrace();
             Map<String, Object> response = new HashMap<>();
-            response.put("status", 500);
             response.put("msg", "支付处理失败: " + e.getMessage());
             return ResponseEntity.badRequest().body(response);
         }
