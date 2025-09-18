@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.a.mapper.CategoryMapper">
+    <select id="selectAllCategories" resultType="com.example.a.entity.Category">
+        SELECT * FROM category
+    </select>
+
+    <select id="selectCategoryById" parameterType="java.lang.Long" resultType="com.example.a.entity.Category">
+        SELECT * FROM category WHERE categoryId = #{categoryId}
+    </select>
+
+    <insert id="insertCategory" parameterType="com.example.a.entity.Category">
+        INSERT INTO category (categoryName, parentId, categoryLevel, icon, isShow, createTime, updateTime)
+        VALUES (#{categoryName}, #{parentId}, #{categoryLevel}, #{icon}, #{isShow}, NOW(), NOW())
+    </insert>
+
+    <update id="updateCategory" parameterType="com.example.a.entity.Category">
+        UPDATE category
+        SET categoryName = #{categoryName},
+            parentId = #{parentId},
+            categoryLevel = #{categoryLevel},
+            icon = #{icon},
+            isShow = #{isShow},
+            createTime = #{createTime},
+            updateTime = #{updateTime}
+        WHERE categoryId = #{categoryId}
+    </update>
+    <select id="selectCategoriesByLevel" parameterType="java.lang.Integer" resultType="com.example.a.entity.Category">
+        SELECT * FROM category WHERE categoryLevel = #{categoryLevel}
+    </select>
+
+    <delete id="deleteCategory" parameterType="java.lang.Long">
+        DELETE FROM category WHERE categoryId = #{categoryId}
+    </delete>
+
+    <select id="searchCategoriesByName" parameterType="java.lang.String" resultType="com.example.a.entity.Category">
+        SELECT * FROM category WHERE categoryName LIKE CONCAT('%', #{categoryName}, '%')
+    </select>
+</mapper>

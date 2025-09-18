@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.a.mapper.ReviewMapper">
+    <resultMap id="ReviewResult" type="com.example.a.entity.Review">
+        <id column="reviewId" property="reviewId"/>
+        <result column="productId" property="productId"/>
+        <result column="userId" property="userId"/>
+        <result column="rating" property="rating"/>
+        <result column="reviewDetail" property="reviewDetail"/>
+        <result column="createTime" property="createTime"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.example.a.entity.Review">
+        INSERT INTO review (productId, userId, rating, reviewDetail, createTime)
+        VALUES (#{productId}, #{userId}, #{rating}, #{reviewDetail}, NOW())
+    </insert>
+
+    <select id="listByProductId" resultMap="ReviewResult">
+        SELECT reviewId, productId, userId, rating, reviewDetail, createTime
+        FROM review
+        WHERE productId = #{productId}
+        ORDER BY createTime DESC
+    </select>
+
+    <select id="averageRating" resultType="double">
+        SELECT AVG(rating) FROM review WHERE productId = #{productId}
+    </select>
+</mapper>
+

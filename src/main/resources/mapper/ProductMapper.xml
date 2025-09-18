@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.a.mapper.ProductMapper">
+    <select id="selectAllProducts" resultType="com.example.a.entity.Product">
+        SELECT p.*, c.categoryName
+        FROM product p
+        LEFT JOIN category c ON p.categoryId = c.categoryId
+    </select>
+
+    <select id="selectProductById" parameterType="java.lang.Long" resultType="com.example.a.entity.Product">
+        SELECT p.*, c.categoryName
+        FROM product p
+        LEFT JOIN category c ON p.categoryId = c.categoryId
+        WHERE p.productId = #{productId}
+    </select>
+
+    <select id="selectProductsByCategoryId" parameterType="java.lang.Long" resultType="com.example.a.entity.Product">
+        SELECT * FROM product WHERE categoryId = #{categoryId}
+    </select>
+
+    <insert id="insertProduct" parameterType="com.example.a.entity.Product">
+        INSERT INTO product (productName, categoryId, sellingPrice, originalPrice, stock, productDesc, productImg, status, isHot, createTime, updateTime)
+        VALUES (#{productName}, #{categoryId}, #{sellingPrice}, #{originalPrice}, #{stock}, #{productDesc}, #{productImg}, #{status}, #{isHot}, NOW(), NOW())
+    </insert>
+
+    <update id="updateProduct" parameterType="com.example.a.entity.Product">
+        UPDATE product
+        SET productName = #{productName},
+            categoryId = #{categoryId},
+            sellingPrice = #{sellingPrice},
+            originalPrice = #{originalPrice},
+            stock = #{stock},
+            productDesc = #{productDesc},
+            productImg = #{productImg},
+            status = #{status},
+            isHot = #{isHot},
+            updateTime = #{updateTime}
+        WHERE productId = #{productId}
+    </update>
+
+    <update id="updateProductStatus">
+        UPDATE product SET status = #{status}, updateTime = NOW() WHERE productId = #{productId}
+    </update>
+
+    <delete id="deleteProduct" parameterType="java.lang.Long">
+        DELETE FROM product WHERE productId = #{productId}
+    </delete>
+
+    <select id="selectProductsByNameLike" parameterType="java.lang.String" resultType="com.example.a.entity.Product">
+        SELECT p.*, c.categoryName
+        FROM product p
+        LEFT JOIN category c ON p.categoryId = c.categoryId
+        WHERE p.productName LIKE CONCAT('%', #{productName}, '%')
+    </select>
+
+    <!-- 新增搜索方法 -->
+    <select id="searchProducts" resultType="com.example.a.entity.Product">
+        SELECT p.*, c.categoryName
+        FROM product p
+        LEFT JOIN category c ON p.categoryId = c.categoryId
+        WHERE 1=1
+        <if test="keyword != null and keyword != ''">
+            AND (p.productName LIKE CONCAT('%', #{keyword}, '%')
+            OR p.productDesc LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        <if test="categoryId != null">
+            AND p.categoryId = #{categoryId}
+        </if>
+        <if test="minPrice != null">
+            AND p.sellingPrice >= #{minPrice}
+        </if>
+        <if test="maxPrice != null">
+            AND p.sellingPrice &lt; #{maxPrice}
+        </if>
+        <if test="isHot != null">
+            AND p.isHot = #{isHot}
+        </if>
+        ORDER BY p.createTime DESC
+    </select>
+
+    <!-- 获取热销商品 -->
+    <select id="selectHotProducts" resultType="com.example.a.entity.Product">
+        SELECT * FROM product WHERE isHot = 1 ORDER BY createTime DESC LIMIT 8
+    </select>
+
+    <update id="updateHotStatus">
+        UPDATE product SET isHot = #{isHot}, updateTime = NOW() WHERE productId = #{productId}
+    </update>
+</mapper>

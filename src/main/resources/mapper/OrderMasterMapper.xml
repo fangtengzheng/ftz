@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.a.mapper.OrderMasterMapper">
+
+    <select id="findAll" resultType="com.example.a.entity.OrderMaster">
+        SELECT * FROM order_master
+    </select>
+
+    <select id="findById" resultType="com.example.a.entity.OrderMaster">
+        SELECT om.*, s.receiver_name AS receiverName, s.receiver_phone AS receiverPhone,
+               s.receiver_province AS receiverProvince, s.receiver_city AS receiverCity,
+               s.receiver_district AS receiverDistrict, s.receiver_address AS receiverAddress, s.receiver_zip AS receiverZip
+        FROM order_master om
+        LEFT JOIN shipping s ON om.shippingId = s.shipping_id
+        WHERE om.orderId = #{orderId}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO order_master (orderId, userId, shippingId, orderTotal, orderStatus, payStatus, paymentType, postage, createTime)
+        VALUES (#{orderId}, #{userId}, #{shippingId}, #{orderTotal}, #{orderStatus}, #{payStatus}, #{paymentType}, #{postage}, #{createTime})
+    </insert>
+
+    <update id="update">
+        UPDATE order_master
+        SET
+            orderStatus = #{orderStatus},
+            payStatus = #{payStatus},
+            paymentType = #{paymentType},
+            postage = #{postage},
+            paymentTime = #{paymentTime},
+            sendTime = #{sendTime},
+            receiveTime = #{receiveTime},
+            endTime = #{endTime},
+            cancelTime = #{cancelTime}
+        WHERE orderId = #{orderId}
+    </update>
+
+    <update id="updatePayStatus">
+        UPDATE order_master
+        SET
+            payStatus = #{payStatus},
+            orderStatus = #{orderStatus},
+            paymentTime = #{paymentTime},
+            sendTime = #{sendTime}
+        WHERE orderId = #{orderId}
+    </update>
+
+    <!-- 获取用户的订单列表（包含订单详情和收货地址） -->
+    <select id="getUserOrdersWithDetails" resultType="java.util.Map">
+        SELECT
+            om.orderId,
+            om.userId,
+            om.shippingId,
+            om.orderTotal,
+            om.orderStatus,
+            om.payStatus,
+            om.paymentType,
+            om.postage,
+            om.createTime,
+            om.paymentTime,
+            om.sendTime,
+            om.receiveTime,
+            om.endTime,
+            om.cancelTime,
+            s.receiver_name AS receiverName,
+            s.receiver_phone AS receiverPhone,
+            s.receiver_province AS receiverProvince,
+            s.receiver_city AS receiverCity,
+            s.receiver_district AS receiverDistrict,
+            s.receiver_address AS receiverAddress,
+            s.receiver_zip AS receiverZip,
+            (
+                SELECT GROUP_CONCAT(
+                               CONCAT(
+                                       od.detailId, '|',
+                                       od.productId, '|',
+                                       COALESCE(od.productName, ''), '|',
+                                       COALESCE(od.productImg, ''), '|',
+                                       od.sellingPrice, '|',
+                                       od.quantity, '|',
+                                       od.subTotal, '|',
+                                       COALESCE(od.specification, '默认规格'), '|',
+                                       COALESCE(CAST(od.rating AS CHAR), ''), '|',
+                                       COALESCE(od.reviewDetail, '')
+                               )
+                                   SEPARATOR ','
+                       )
+                FROM order_detail od
+                WHERE od.orderId = om.orderId
+            ) as orderDetails
+        FROM order_master om
+                 LEFT JOIN shipping s ON om.shippingId = s.shipping_id
+        WHERE om.userId = #{userId}
+        ORDER BY om.createTime DESC
+    </select>
+
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM order_master WHERE orderId = #{orderId}
+    </delete>
+
+    <delete id="deleteOrderDetails" parameterType="java.lang.String">
+        DELETE FROM order_detail WHERE orderId = #{orderId}
+    </delete>
+
+    <delete id="deletePaymentsByOrderId" parameterType="java.lang.String">
+        DELETE FROM payment WHERE orderId = #{orderId}
+    </delete>
+
+</mapper>

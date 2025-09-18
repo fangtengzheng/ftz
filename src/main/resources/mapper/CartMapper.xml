@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.a.mapper.CartMapper">
+
+    <select id="findAllByUserId" resultType="com.example.a.entity.Cart">
+        SELECT * FROM cart WHERE userId = #{userId}
+    </select>
+
+    <update id="clearCart">
+        DELETE FROM cart WHERE userId = #{userId}
+    </update>
+
+    <insert id="insertToCart">
+        INSERT INTO cart (userId, productId, quantity, createTime, updateTime)
+        VALUES (#{userId}, #{productId}, #{quantity}, #{createTime}, #{updateTime})
+    </insert>
+
+    <update id="updateQuantity">
+        UPDATE cart
+        SET quantity = #{quantity}, updateTime = #{updateTime}
+        WHERE cartId = #{cartId}
+        <!-- 新增：防止负数数量 -->
+        AND #{quantity} >= 1
+    </update>
+
+    <delete id="deleteCart">
+        DELETE FROM cart WHERE cartId = #{cartId}
+    </delete>
+
+    <!-- 新增的映射 -->
+    <select id="findByUserAndProduct" resultType="com.example.a.entity.Cart">
+        SELECT * FROM cart
+        WHERE userId = #{userId} AND productId = #{productId}
+        LIMIT 1
+    </select>
+
+    <select id="findById" resultType="com.example.a.entity.Cart">
+        SELECT * FROM cart
+        WHERE cartId = #{cartId}
+    </select>
+
+</mapper>

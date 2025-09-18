@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.a.mapper.OrderDetailMapper">
+
+    <select id="findAllByOrderId" resultType="com.example.a.entity.OrderDetail">
+        SELECT * FROM order_detail WHERE orderId = #{orderId}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO order_detail (orderId, productId, productName, productImg, specification, sellingPrice, quantity, subTotal, rating, reviewDetail)
+        VALUES (#{orderId}, #{productId}, #{productName}, #{productImg}, #{specification}, #{sellingPrice}, #{quantity}, #{subTotal}, #{rating}, #{reviewDetail})
+    </insert>
+
+    <update id="updateReview">
+        UPDATE order_detail
+        SET rating = #{rating}, reviewDetail = #{reviewDetail}
+        WHERE orderId = #{orderId} AND productId = #{productId}
+    </update>
+
+    <!-- 按商品ID汇总评价，连接用户表拿用户名和头像 -->
+    <select id="listReviewsByProductId" resultType="java.util.Map">
+        SELECT
+            od.detailId,
+            od.productId,
+            od.rating,
+            od.reviewDetail,
+            om.createTime AS createTime,
+            u.userId,
+            u.username,
+            u.avatar
+        FROM order_detail od
+        JOIN order_master om ON om.orderId = od.orderId
+        JOIN user u ON u.userId = om.userId
+        WHERE od.productId = #{productId}
+          AND od.rating IS NOT NULL
+        ORDER BY om.createTime DESC
+    </select>
+
+</mapper>

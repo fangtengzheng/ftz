@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.a.mapper.PaymentMapper">
+
+    <select id="findAllByOrderId" resultType="com.example.a.entity.Payment">
+        SELECT * FROM payment WHERE orderId = #{orderId}
+    </select>
+
+    <select id="findByPaymentId" resultType="com.example.a.entity.Payment">
+        SELECT * FROM payment WHERE paymentId = #{paymentId}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO payment (paymentId, orderId, paymentNo, paymentType, paymentAmount, paymentStatus, updateTime,createTime)
+        VALUES (#{paymentId}, #{orderId}, #{paymentNo}, #{paymentType}, #{paymentAmount}, #{paymentStatus}, NOW(),NOW())
+    </insert>
+
+    <update id="updatePayment">
+        UPDATE payment 
+        SET paymentType = #{paymentType}, 
+            paymentAmount = #{paymentAmount}, 
+            paymentStatus = #{paymentStatus}, 
+            updateTime = NOW()
+        WHERE paymentId = #{paymentId}
+    </update>
+
+</mapper>
