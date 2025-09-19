@@ -51,10 +51,12 @@ public class OrderMasterController {
         Map<String, Object> result = new HashMap<>();
         try {
             List<Map<String, Object>> orders = orderMasterService.getUserOrdersWithDetails(userId);
+            result.put("status", 200);
             result.put("msg", "获取成功");
             result.put("orders", orders);
         } catch (Exception e) {
             e.printStackTrace(); // 打印详细错误信息到控制台
+            result.put("status", 500);
             result.put("msg", "获取订单失败: " + e.getMessage());
             result.put("error", e.getClass().getSimpleName());
         }
@@ -70,6 +72,7 @@ public class OrderMasterController {
             orderMaster.setPayStatus(0); // 待支付
 
             orderMasterService.insert(orderMaster);
+            result.put("status", 200);
             result.put("msg", "订单创建成功");
             result.put("orderId", orderMaster.getOrderId());
         } catch (Exception e) {
@@ -134,13 +137,13 @@ public class OrderMasterController {
 
                 orderDetailService.insert(orderDetail);
             }
-
+            result.put("status", 200);
             result.put("msg", "订单创建成功");
             result.put("orderId", orderId);
 
         } catch (Exception e) {
             e.printStackTrace();
-
+            result.put("status", 500);
             result.put("msg", "订单创建失败: " + e.getMessage());
         }
         return result;
@@ -159,9 +162,11 @@ public class OrderMasterController {
         try {
             String orderId = (String) request.get("orderId");
             orderMasterService.confirmReceive(orderId);
+            result.put("status", 200);
             result.put("msg", "确认收货成功");
         } catch (Exception e) {
             e.printStackTrace();
+            result.put("status", 500);
             result.put("msg", "确认收货失败: " + e.getMessage());
         }
         return result;
@@ -174,9 +179,11 @@ public class OrderMasterController {
         try {
             String orderId = (String) request.get("orderId");
             orderMasterService.cancelOrder(orderId);
+            result.put("status", 200);
             result.put("msg", "订单取消成功");
         } catch (Exception e) {
             e.printStackTrace();
+            result.put("status", 500);
             result.put("msg", "取消订单失败: " + e.getMessage());
         }
         return result;
@@ -187,9 +194,11 @@ public class OrderMasterController {
         Map<String, Object> result = new HashMap<>();
         try {
             orderMasterService.delete(orderId);
+            result.put("status", 200);
             result.put("msg", "订单删除成功");
         } catch (Exception e) {
             e.printStackTrace();
+            result.put("status", 500);
             result.put("msg", "订单删除失败: " + e.getMessage());
         }
         return result;
@@ -230,10 +239,11 @@ public class OrderMasterController {
 
             // 将评价写入订单明细
             orderDetailService.updateReview(orderId, productId, rating, reviewDetail);
-
+            result.put("status", 200);
             result.put("msg", "评价成功");
         } catch (Exception e) {
             e.printStackTrace();
+            result.put("status", 500);
             result.put("msg", "评价失败: " + e.getMessage());
         }
         return result;

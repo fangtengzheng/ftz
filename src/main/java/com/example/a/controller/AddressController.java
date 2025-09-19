@@ -25,8 +25,10 @@ public class AddressController {
         Map<String, Object> result = new HashMap<>();
         int rows = addressService.addAddress(shipping);
         if (rows > 0) {
+            result.put("status", 200);
             result.put("msg", "添加成功");
         } else {
+            result.put("status", 500);
             result.put("msg", "添加失败");
         }
         return result;
@@ -40,9 +42,11 @@ public class AddressController {
         Map<String, Object> result = new HashMap<>();
         Shipping address = addressService.getAddress(userId, shippingId);
         if (address != null) {
+            result.put("status", 200);
             result.put("msg", "获取成功");
             result.put("address", address);
         } else {
+            result.put("status", 404);
             result.put("msg", "地址不存在");
         }
         return result;
@@ -54,6 +58,7 @@ public class AddressController {
     public Map<String, Object> getAllAddresses(@RequestParam Long userId) {
         Map<String, Object> result = new HashMap<>();
         List<Shipping> addresses = addressService.getAllAddresses(userId);
+        result.put("status", 200);
         result.put("msg", "获取成功");
         result.put("addresses", addresses);
         return result;
@@ -66,8 +71,10 @@ public class AddressController {
         Map<String, Object> result = new HashMap<>();
         int rows = addressService.updateAddress(shipping);
         if (rows > 0) {
+            result.put("status", 200);
             result.put("msg", "更新成功");
         } else {
+            result.put("status", 500);
             result.put("msg", "更新失败");
         }
         return result;
@@ -80,8 +87,10 @@ public class AddressController {
         Map<String, Object> result = new HashMap<>();
         int rows = addressService.deleteAddress(userId, shippingId);
         if (rows > 0) {
+            result.put("status", 200);
             result.put("msg", "删除成功");
         } else {
+            result.put("status", 500);
             result.put("msg", "删除失败");
         }
         return result;
@@ -94,8 +103,10 @@ public class AddressController {
         Map<String, Object> result = new HashMap<>();
         int rows = addressService.setDefaultAddress(userId, shippingId);
         if (rows > 0) {
+            result.put("status", 200);
             result.put("msg", "设置成功");
         } else {
+            result.put("status", 500);
             result.put("msg", "设置失败");
         }
         return result;
@@ -109,9 +120,11 @@ public class AddressController {
         Map<String, Object> result = new HashMap<>();
         Shipping address = addressService.getDefaultAddress(userId);
         if (address != null) {
+            result.put("status", 200);
             result.put("msg", "获取成功");
             result.put("address", address);
         } else {
+            result.put("status", 404);
             result.put("msg", "没有默认地址");
         }
         return result;
@@ -124,11 +137,13 @@ public class AddressController {
         Map<String, Object> result = new HashMap<>();
         try {
             List<Shipping> addresses = addressService.getAllAddresses(userId);
+            result.put("status", 200);
             result.put("msg", "测试成功");
             result.put("addresses", addresses);
             result.put("count", addresses.size());
             result.put("timestamp", System.currentTimeMillis());
         } catch (Exception e) {
+            result.put("status", 500);
             result.put("msg", "测试失败: " + e.getMessage());
             result.put("error", e.toString());
         }
