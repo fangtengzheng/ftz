@@ -12,7 +12,8 @@ public interface OrderDetailMapper {
     List<OrderDetail> findAllByOrderId(String orderId);
 
     void insert(OrderDetail orderDetail);
-
+    // 在 OrderDetailMapper 接口中添加
+    List<Map<String, Object>> listReviewsByUserId(@Param("userId") Long userId);
     void updateReview(@Param("orderId") String orderId, @Param("productId") Long productId,
             @Param("rating") Integer rating, @Param("reviewDetail") String reviewDetail);
 

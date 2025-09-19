@@ -23,7 +23,10 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     public void insert(OrderDetail orderDetail) {
         orderDetailMapper.insert(orderDetail);
     }
-
+    @Override
+    public List<Map<String, Object>> listReviewsByUserId(Long userId) {
+        return orderDetailMapper.listReviewsByUserId(userId);
+    }
     @Override
     public void updateReview(String orderId, Long productId, Integer rating, String reviewDetail) {
         orderDetailMapper.updateReview(orderId, productId, rating, reviewDetail);

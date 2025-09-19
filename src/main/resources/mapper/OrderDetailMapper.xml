@@ -38,5 +38,25 @@
           AND od.rating IS NOT NULL
         ORDER BY om.createTime DESC
     </select>
-
+    <!-- 查询用户的全部评价（只包含已评价的商品） -->
+    <select id="listReviewsByUserId" resultType="java.util.Map">
+        SELECT
+            od.detailId,
+            od.productId,
+            p.productName,
+            p.productImg,
+            od.rating,
+            od.reviewDetail,
+            om.orderId,
+            om.createTime AS reviewTime,
+            od.specification,
+            od.quantity
+        FROM order_detail od
+                 JOIN order_master om ON om.orderId = od.orderId
+                 JOIN product p ON p.productId = od.productId
+        WHERE om.userId = #{userId}
+          AND od.rating IS NOT NULL
+          AND od.reviewDetail IS NOT NULL
+        ORDER BY om.createTime DESC
+    </select>
 </mapper>

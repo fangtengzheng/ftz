@@ -40,4 +40,18 @@ public class OrderDetailController {
         }
         return result;
     }
+    // 获取某个用户的全部评价（只展示已评价的商品）
+    @GetMapping("/user/{userId}/reviews")
+    public Map<String, Object> getReviewsByUserId(@PathVariable Long userId) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            List<Map<String, Object>> data = orderDetailService.listReviewsByUserId(userId);
+            result.put("status", 200);
+            result.put("data", data);
+        } catch (Exception e) {
+            result.put("status", 500);
+            result.put("msg", e.getMessage());
+        }
+        return result;
+    }
 }
